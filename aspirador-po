@@ -1,0 +1,54 @@
+# Inteligência Artificial - Atividade Avaliativa Prática
+# Autor: Arthur Cássio Valadares de Oliveira
+
+import numpy as np
+from sklearn.linear_model import Perceptron
+import matplotlib.pyplot as plt
+
+# ---- DADOS DE TREINO ----
+dados_treino = [
+    {"piso": 2, "poeira": 2, "obstaculos": 0, "potencia": 1, "velocidade": 3},
+    {"piso": 1, "poeira": 8, "obstaculos": 2, "potencia": 3, "velocidade": 1},
+    {"piso": 3, "poeira": 5, "obstaculos": 4, "potencia": 2, "velocidade": 1},
+    {"piso": 2, "poeira": 1, "obstaculos": 1, "potencia": 1, "velocidade": 4},
+    {"piso": 1, "poeira": 9, "obstaculos": 3, "potencia": 3, "velocidade": 2},
+    {"piso": 3, "poeira": 6, "obstaculos": 0, "potencia": 2, "velocidade": 3},
+    {"piso": 2, "poeira": 3, "obstaculos": 2, "potencia": 1, "velocidade": 2},
+    {"piso": 1, "poeira": 7, "obstaculos": 1, "potencia": 3, "velocidade": 1},
+    {"piso": 3, "poeira": 4, "obstaculos": 3, "potencia": 2, "velocidade": 4},
+    {"piso": 2, "poeira": 0, "obstaculos": 0, "potencia": 1, "velocidade": 5}
+]
+
+# Entradas (X) e saídas (y)
+X = np.array([[d["piso"], d["poeira"], d["obstaculos"]] for d in dados_treino])
+y_potencia = np.array([d["potencia"] for d in dados_treino])
+y_velocidade = np.array([d["velocidade"] for d in dados_treino])
+
+# ---- TREINAMENTO ----
+# Cria dois modelos perceptron: um pra potência e outro pra velocidade
+modelo_potencia = Perceptron(max_iter=1000, eta0=0.1, random_state=42)
+modelo_velocidade = Perceptron(max_iter=1000, eta0=0.1, random_state=42)
+
+# Treina os modelos
+modelo_potencia.fit(X, y_potencia)
+modelo_velocidade.fit(X, y_velocidade)
+
+# ---- TESTE ----
+# Exemplo de teste: piso=3, poeira=4, obstaculos=2
+teste = np.array([[3, 4, 2]])
+pred_potencia = modelo_potencia.predict(teste)[0]
+pred_velocidade = modelo_velocidade.predict(teste)[0]
+
+print(f"Previsão para o ambiente de teste:")
+print(f"Potência sugerida: {pred_potencia}")
+print(f"Velocidade sugerida: {pred_velocidade}")
+
+# ---- GRÁFICO (simulação do erro decaindo) ----
+# Só pra visualização didática
+erros = np.linspace(1, 0.05, 20)  # erro caindo
+plt.plot(erros, marker='o')
+plt.title("Simulação da Redução de Erro Durante o Treinamento")
+plt.xlabel("Épocas")
+plt.ylabel("Erro")
+plt.grid(True)
+plt.show()
